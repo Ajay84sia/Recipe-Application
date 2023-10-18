@@ -1,6 +1,9 @@
 const express = require('express')
 const cors = require("cors")
-const { connection } = require('./db')
+const { connection } = require('./config/db')
+const { userRouter } = require('./routes/User.routes')
+const { auth } = require('./middleware/auth.middleware')
+const { recipeRouter } = require('./routes/Recipe.routes')
 
 require("dotenv").config()
 
@@ -13,6 +16,11 @@ app.get("/", (req, res) => {
     res.status(200).send("Basic API Endpoint")
 })
 
+app.use("/user", userRouter)
+
+app.use(auth)
+
+app.use("/recipe", recipeRouter)
 
 app.listen(process.env.PORT, async () => {
     try {
