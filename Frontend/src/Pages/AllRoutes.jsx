@@ -6,6 +6,7 @@ import SignUp from "./SignUp";
 import RecipePage from "./RecipePage";
 import Recipes from "./Recipes";
 import NotFound from "./NotFound";
+import FavoriteRecipes from "./FavoriteRecipes";
 
 const AllRoutes = () => {
   return (
@@ -15,6 +16,7 @@ const AllRoutes = () => {
       <Route path="/signup" element={<SignUp />}></Route>
       <Route path="/recipes" element={<Recipes />}></Route>
       <Route path="/recipe/:id" element={<RecipePage />}></Route>
+      <Route path="/favorites" element={<FavoriteRecipes />}></Route>
       <Route path="/*" element={<NotFound />}></Route>
     </Routes>
   );

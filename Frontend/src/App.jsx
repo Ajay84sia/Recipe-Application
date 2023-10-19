@@ -1,10 +1,13 @@
 import AllRoutes from "./Pages/AllRoutes";
+import Navbar from "./Components/Navbar";
+import Footer from "./Components/Footer";
 
 function App() {
-  const apiKey = import.meta.env.VITE_API_KEY;
   return (
     <>
+    <Navbar/>
     <AllRoutes/>
+    <Footer/>
     </>
   );
 }
