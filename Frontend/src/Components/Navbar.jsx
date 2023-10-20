@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./Navbar.css";
 import { FiHeart } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../Context/AuthContext";
 const Navbar = () => {
+  const { logout, isAuth } = useContext(AuthContext);
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem("recipeToken");
+    localStorage.removeItem("recipeUser");
+    localStorage.removeItem("favoriteData");
+  };
   return (
     <div className="antialiased bg-gray-400 w-screen fixed z-10">
       <header className="lg:px-16 px-6 bg-white flex flex-wrap items-center lg:py-0 py-2 dark:bg-gray-900 dark:text-white">
         <div className="flex-1 flex justify-between items-center">
-          <a href="/">
+          <Link to="/">
             <h1 className="font-bold text-blue-600 text-2xl">Recipe App</h1>
-          </a>
+          </Link>
         </div>
 
         <label htmlFor="menu-toggle" className="pointer-cursor lg:hidden block">
@@ -32,28 +41,40 @@ const Navbar = () => {
           <nav>
             <ul className="lg:flex items-center justify-between text-center text-gray-700 pt-4 lg:pt-0 dark:text-white">
               <li>
-                <a
+                <Link
                   className="lg:p-4 py-3 px-0 block border-b-2 border-transparent hover:border-indigo-400"
-                  href="/login"
-                >
-                  Login
-                </a>
-              </li>
-              <li>
-                <a
-                  className="lg:p-4 py-3 px-0 block border-b-2 border-transparent hover:border-indigo-400"
-                  href="signup"
+                  to="/signup"
                 >
                   Sign Up
-                </a>
+                </Link>
               </li>
+              {!isAuth ? (
+                <li>
+                  <Link
+                    className="lg:p-4 py-3 px-0 block border-b-2 border-transparent hover:border-indigo-400"
+                    to="/login"
+                  >
+                    Login
+                  </Link>
+                </li>
+              ) : (
+                <li className="flex justify-center">
+                  <button
+                    className="lg:p-4 py-3 px-0 block border-b-2 border-transparent hover:border-indigo-400"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </li>
+              )}
+
               <li>
-                <a
+                <Link
                   className="lg:p-4 py-3 px-0 block border-b-2 border-transparent hover:border-indigo-400 lg:mb-0 mb-2"
-                  href="/favorites"
+                  to="/favorites"
                 >
                   <FiHeart className="border-black dark:border-white m-auto" />
-                </a>
+                </Link>
               </li>
             </ul>
           </nav>

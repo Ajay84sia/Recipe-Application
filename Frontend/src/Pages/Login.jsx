@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthContext } from "../Context/AuthContext";
 
 const Login = () => {
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -23,8 +25,9 @@ const Login = () => {
       .post("https://impossible-skirt-cod.cyclic.app/user/login", formData)
       .then((res) => {
         console.log("Login Successful", res.data);
+        login();
         localStorage.setItem("recipeToken", res.data.token);
-        localStorage.setItem("recipeUSer", res.data.name);
+        localStorage.setItem("recipeUser", res.data.name);
         toast.success("Login Successful", {
           position: "bottom-center",
           theme: "colored",
@@ -44,6 +47,7 @@ const Login = () => {
         });
       });
   };
+
   return (
     <>
       <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
@@ -112,12 +116,12 @@ const Login = () => {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member ?{" "}
-            <a
-              href="/signup"
+            <Link
+              to="/signup"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
               Register Now
-            </a>
+            </Link>
           </p>
         </div>
       </div>

@@ -6,6 +6,7 @@ import SignUp from "./SignUp";
 import RecipePage from "./RecipePage";
 import NotFound from "./NotFound";
 import FavoriteRecipes from "./FavoriteRecipes";
+import PrivateRoute from "./PrivateRoute";
 
 const AllRoutes = () => {
   return (
@@ -14,7 +15,14 @@ const AllRoutes = () => {
       <Route path="/login" element={<Login />}></Route>
       <Route path="/signup" element={<SignUp />}></Route>
       <Route path="/recipe/:id" element={<RecipePage />}></Route>
-      <Route path="/favorites" element={<FavoriteRecipes />}></Route>
+      <Route
+        path="/favorites"
+        element={
+          <PrivateRoute>
+            <FavoriteRecipes />
+          </PrivateRoute>
+        }
+      ></Route>
       <Route path="/*" element={<NotFound />}></Route>
     </Routes>
   );
