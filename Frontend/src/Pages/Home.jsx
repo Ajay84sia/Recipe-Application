@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaHeart } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const stripHTML = (htmlString) => {
   let doc = new DOMParser().parseFromString(htmlString, "text/html");
@@ -7946,8 +7948,12 @@ const recipes = [
 const Home = () => {
   const apiKey = import.meta.env.VITE_API_KEY;
   const navigate = useNavigate();
+  const [favoriteData, setFavoriteData] = useState(
+    JSON.parse(localStorage.getItem("favoriteData")) || []
+  );
+  console.log(favoriteData, "fav");
   const [recipeData, setRecipeData] = useState(recipes || []);
-  const [favorites, setFavorites] = useState([]);
+  // const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -7972,14 +7978,61 @@ const Home = () => {
     // getData();
   }, []);
 
-
-
   const handleViewRecipe = (recipe) => {
     console.log("recipe", recipe);
     localStorage.setItem("recipe", JSON.stringify(recipe));
     navigate(`/recipe/${recipe.id}`);
   };
 
+  const handlePostRecipe = (recipe) => {
+    const postRecipeData = {
+      title: recipe.title,
+      image: recipe.image,
+      ingredients: recipe.extendedIngredients,
+      dishTypes: recipe.dishTypes,
+      instructions: recipe.instructions,
+      summary: recipe.summary,
+    };
+
+    axios
+      .post(
+        `https://impossible-skirt-cod.cyclic.app/recipe/add`,
+        postRecipeData,
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem("recipeToken")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data.msg);
+        toast.success("Recipe Marked as Favorite", {
+          position: "bottom-center",
+          theme: "colored",
+          autoClose: 2000,
+        });
+      })
+      .catch((err) => {
+        console.log(res.data.msg);
+        toast.error(`Something Went Wrong`, {
+          position: "bottom-center",
+          theme: "colored",
+          autoClose: 3000,
+        });
+      });
+  };
+
+  const toggleFavorite = (recipe) => {
+    const index = favoriteData.findIndex((fav) => fav.title === recipe.title);
+    if (index === -1) {
+      setFavoriteData([...favoriteData, recipe]);
+      handlePostRecipe(recipe);
+    } else {
+      const updatedFavorites = [...favoriteData];
+      updatedFavorites.splice(index, 1);
+      setFavoriteData(updatedFavorites);
+    }
+  };
 
   return (
     <>
@@ -8035,11 +8088,15 @@ const Home = () => {
                       </button>
                       <button
                         className="text-blue-700 hover:underline text-center sm:text-left hover:font-bold mb-2 sm:mb-0 text-sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(item);
+                        }}
                       >
                         <FaHeart
                           size={26}
                           color={
-                            favorites.some((fav) => fav.id === el.id)
+                            favoriteData.some((fav) => fav.title === item.title)
                               ? "red"
                               : "grey"
                           }
@@ -8052,6 +8109,7 @@ const Home = () => {
           </div>
         )}
       </div>
+      <ToastContainer />
     </>
   );
 };
