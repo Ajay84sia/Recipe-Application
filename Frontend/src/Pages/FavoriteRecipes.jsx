@@ -3,6 +3,8 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaTrash } from "react-icons/fa";
+import Loader from "../assets/loader.gif";
+import { Link } from "react-router-dom";
 
 const FavoriteRecipes = () => {
   const [favorites, setFavorites] = useState([]);
@@ -65,7 +67,26 @@ const FavoriteRecipes = () => {
       <div className="min-h-screen bg-white pt-20">
         <div className="container mx-auto px-4">
           {loading ? (
-            <h1>Loading.....</h1>
+            <div className="flex justify-center">
+              <img src={Loader} alt="Loading..." />
+            </div>
+          ) : favorites.length == 0 ? (
+            <>
+              {" "}
+              <h1 className="font-bold text-center mt-4 text-4xl">
+                Please Add your favorite recipes...
+              </h1>{" "}
+              <div className="mt-4 flex justify-center">
+                <Link to="/">
+                  <button
+                    type="button"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    Go Back
+                  </button>
+                </Link>
+              </div>
+            </>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {favorites &&

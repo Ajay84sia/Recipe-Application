@@ -40,14 +40,20 @@ const Navbar = () => {
         >
           <nav>
             <ul className="lg:flex items-center justify-between text-center text-gray-700 pt-4 lg:pt-0 dark:text-white">
-              <li>
-                <Link
-                  className="lg:p-4 py-3 px-0 block border-b-2 border-transparent hover:border-indigo-400"
-                  to="/signup"
-                >
-                  Sign Up
-                </Link>
-              </li>
+              {isAuth ? (
+                <li className="lg:p-4 py-3 px-0 block capitalize border-b-2 border-transparent hover:border-indigo-400">
+                  {localStorage.getItem("recipeUser")}
+                </li>
+              ) : (
+                <li>
+                  <Link
+                    className="lg:p-4 py-3 px-0 block border-b-2 border-transparent hover:border-indigo-400"
+                    to="/signup"
+                  >
+                    Sign Up
+                  </Link>
+                </li>
+              )}
               {!isAuth ? (
                 <li>
                   <Link
